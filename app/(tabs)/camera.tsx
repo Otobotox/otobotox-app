@@ -1,5 +1,6 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
+import { Button, StyleSheet, Text, TouchableOpacity, View , Image, Platform } from 'react-native';
+import { useState } from 'react';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
