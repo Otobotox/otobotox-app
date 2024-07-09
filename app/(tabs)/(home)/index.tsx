@@ -1,11 +1,17 @@
 import { Link } from 'expo-router';
-import { Text, View, StyleSheet  } from "react-native";
+import { View, Text, StyleSheet } from 'react-native';
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-      <Link href="(home)/details">View details</Link>
+      <Text>Home</Text>
+      <Link
+        href={{
+          pathname: '/details/[id]',
+          params: { id: '1' },
+        }}>
+        View user details
+      </Link>
     </View>
   );
 }
