@@ -1,76 +1,83 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View , Image, Platform } from 'react-native';
-import { useState } from 'react';
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { CameraType } from 'expo-camera/build/legacy/Camera.types';
+import * as React from "react";
+import { SafeAreaView, View } from "react-native";
+
+import {
+  BarcodeScanningResult,
+  CameraMode,
+  CameraView,
+  FlashMode,
+} from "expo-camera";
+import MainRowActions from "@/components/MainRowActions";
+import PictureView from "@/components/PictureView";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+} from "react-native-reanimated";
+import CameraTools from "@/components/CameraTools";
+import * as WebBrowser from "expo-web-browser";
 
 export default function Process() {
-  const [facing, setFacing] = useState(CameraType.back);
-  const [torch, setTorch] = useState(false);
-  const [permission, requestPermission] = useCameraPermissions();
+  const cameraRef = React.useRef<CameraView>(null);
+  const [cameraMode, setCameraMode] = React.useState<CameraMode>("picture");
+  const [cameraTorch, setCameraTorch] = React.useState<boolean>(false);
+  const [cameraFlash, setCameraFlash] = React.useState<FlashMode>("off");
+  const [cameraFacing, setCameraFacing] = React.useState<"front" | "back">(
+    "back"
+  );
+  const [cameraZoom, setCameraZoom] = React.useState<number>(0);
+  const [picture, setPicture] = React.useState<string>(""); // "https://picsum.photos/seed/696/3000/2000"
 
-  if (!permission) {
-    // Camera permissions are still loading.
-    return <View />;
+ // const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  async function handleTakePicture() {
+    if (cameraRef.current) {
+      const photo = await cameraRef.current?.takePictureAsync();
+      const response = await fetch(photo!.uri);
+      console.log(photo!.uri)
+      setPicture(photo!.uri)
+      const filename = photo!.uri.substring(photo!.uri.lastIndexOf('/') + 1);
+      console.log(filename)
+    }
   }
 
-  if (!permission.granted) {
-    // Camera permissions are not granted yet.
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
-  }
-
-  function toggleCameraFacing() {
-    setFacing(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-  }
-
-  function toggleTorch() {
-    setTorch(current => (current === false ? true : false));
-  }
+  if (picture) return <PictureView picture={picture} setPicture={setPicture} />;
 
   return (
-    <View style={styles.container}>
-      <CameraView style={styles.camera} facing={facing} enableTorch={torch}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Flip</Text>
-          </TouchableOpacity>        
-          <TouchableOpacity style={styles.button} onPress={toggleTorch}>
-            <Text style={styles.text}>Torch</Text>
-          </TouchableOpacity>    
+    <Animated.View
+      layout={LinearTransition}
+      entering={FadeIn.duration(1000)}
+      exiting={FadeOut.duration(1000)}
+      style={{ flex: 1 }}
+    >
+      <CameraView
+        ref={cameraRef}
+        style={{ flex: 1 }}
+        facing={cameraFacing}
+        mode={cameraMode}
+        zoom={cameraZoom}
+        enableTorch={cameraTorch}
+        flash={cameraFlash}
+        onCameraReady={() => console.log("camera is ready")}
+      >
+        <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, padding: 6 }}>
+            <CameraTools
+              cameraZoom={cameraZoom}
+              cameraFlash={cameraFlash}
+              cameraTorch={cameraTorch}
+              setCameraZoom={setCameraZoom}
+              setCameraFacing={setCameraFacing}
+              setCameraTorch={setCameraTorch}
+              setCameraFlash={setCameraFlash}
+            />
+            <MainRowActions
+              handleTakePicture={handleTakePicture}
+              cameraMode={cameraMode}
+            />
+          </View>
+        </View>
       </CameraView>
-    </View>
+    </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 64,
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-});
