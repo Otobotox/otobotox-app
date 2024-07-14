@@ -41,6 +41,13 @@ export default function Process() {
     }
   }
 
+  async function handleSelectPictureAsset(uri: string) {
+      console.log(uri)
+      setPicture(uri)
+      const filename = uri.substring(uri.lastIndexOf('/') + 1);
+      console.log(filename)
+  }
+
   if (picture) return <PictureView picture={picture} setPicture={setPicture} />;
 
   return (
@@ -73,6 +80,7 @@ export default function Process() {
             />
             <MainRowActions
               handleTakePicture={handleTakePicture}
+              handleSelectPictureAsset={handleSelectPictureAsset}
               cameraMode={cameraMode}
             />
           </View>

@@ -33,7 +33,7 @@ export default function CameraTools({
       <IconButton
         onPress={() => setCameraTorch((prevValue) => !prevValue)}
         iosName={
-          cameraTorch ? "flashlight.off.circle" : "flashlight.slash.circle"
+          cameraTorch ? "flashlight-outline" : "flashlight-sharp"
         }
         androidName={
             cameraTorch ? "flashlight-outline" : "flashlight-sharp"
@@ -45,7 +45,7 @@ export default function CameraTools({
             prevValue === "back" ? "front" : "back"
           )
         }
-        iosName={"arrow.triangle.2.circlepath.camera"}
+        iosName="camera-reverse"
         androidName="camera-reverse"
         width={25}
         height={21}
@@ -54,7 +54,7 @@ export default function CameraTools({
         onPress={() =>
           setCameraFlash((prevValue) => (prevValue === "off" ? "on" : "off"))
         }
-        iosName={cameraFlash === "on" ? "bolt.circle" : "bolt.slash.circle"}
+        iosName={cameraFlash === "on" ? "flash" : "flash-off"}
         androidName={cameraFlash === "on" ? "flash" : "flash-off"}
       />
       <IconButton
@@ -64,7 +64,7 @@ export default function CameraTools({
             setCameraZoom((prevValue) => prevValue + 0.1);
           }
         }}
-        iosName={"plus.magnifyingglass"}
+        iosName="add-circle"
         androidName="add-circle"
       />
       <IconButton
@@ -74,7 +74,7 @@ export default function CameraTools({
             setCameraZoom((prevValue) => prevValue - 0.1);
           }
         }}
-        iosName={"minus.magnifyingglass"}
+        iosName="remove-circle"
         androidName="remove-circle"
       />
     </View>
