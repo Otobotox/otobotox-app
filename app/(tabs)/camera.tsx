@@ -15,7 +15,9 @@ import Animated, {
   LinearTransition,
 } from "react-native-reanimated";
 import CameraTools from "@/components/CameraTools";
+import { Asset } from "expo-media-library";
 import * as WebBrowser from "expo-web-browser";
+import MediaLibraryView from "@/components/MediaLibraryView";
 
 export default function Process() {
   const cameraRef = React.useRef<CameraView>(null);
@@ -27,6 +29,7 @@ export default function Process() {
   );
   const [cameraZoom, setCameraZoom] = React.useState<number>(0);
   const [picture, setPicture] = React.useState<string>(""); // "https://picsum.photos/seed/696/3000/2000"
+  const [mediaLibraryMode, setMediaLibraryMode] = React.useState<boolean>(false);
 
  // const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -41,6 +44,8 @@ export default function Process() {
     }
   }
 
+  console.log(mediaLibraryMode)
+
   async function handleSelectPictureAsset(uri: string) {
       console.log(uri)
       setPicture(uri)
@@ -48,7 +53,14 @@ export default function Process() {
       console.log(filename)
   }
 
+  async function handleMediaLibraryRequest() {
+    setMediaLibraryMode(true)
+  }
+
+    
+  if (mediaLibraryMode) return <MediaLibraryView mediaLibraryMode={mediaLibraryMode} setMediaLibraryMode={setMediaLibraryMode}/>;
   if (picture) return <PictureView picture={picture} setPicture={setPicture} />;
+  
 
   return (
     <Animated.View
@@ -81,6 +93,7 @@ export default function Process() {
             <MainRowActions
               handleTakePicture={handleTakePicture}
               handleSelectPictureAsset={handleSelectPictureAsset}
+              handleMediaLibraryRequest={handleMediaLibraryRequest}
               cameraMode={cameraMode}
             />
           </View>

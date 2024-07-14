@@ -4,7 +4,6 @@ import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { SymbolView } from "expo-symbols";
 import { Colors } from "@/constants/Colors";
 import { useCameraPermissions, useMicrophonePermissions } from "expo-camera";
 import { usePermissions } from "expo-media-library";

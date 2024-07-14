@@ -17,6 +17,7 @@ const CIRCLE_SIZE = 100;
 
 interface MainRowActionsProps {
   handleTakePicture: () => void;
+  handleMediaLibraryRequest: () => void;
   handleSelectPictureAsset: (uri: string) => void;
   cameraMode: CameraMode;
 }
@@ -24,6 +25,7 @@ export default function MainRowActions({
   cameraMode,
   handleTakePicture,
   handleSelectPictureAsset,
+  handleMediaLibraryRequest,
 }: MainRowActionsProps) {
 
   const [assets, setAssets] = React.useState<Asset[]>([]);
@@ -78,9 +80,9 @@ export default function MainRowActions({
         </TouchableOpacity>
       </View>
       <View style={styles.bottomLeftContainerLib}>
-        <Link href={"/media-library"} asChild>
+        <TouchableOpacity onPress={handleMediaLibraryRequest}>
           <IconButton androidName="add" iosName="add" />
-        </Link>
+        </TouchableOpacity>
       </View>
     </View>
   );
